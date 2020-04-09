@@ -74,7 +74,7 @@ public:
 
 
 		// Fragment Shader
-		fragment = glad_glCreateShader(GL_VERTEX_SHADER);
+		fragment = glCreateShader(GL_FRAGMENT_SHADER);
 		glShaderSource(fragment, 1, &fShaderCode, NULL);
 		glCompileShader(fragment);
 

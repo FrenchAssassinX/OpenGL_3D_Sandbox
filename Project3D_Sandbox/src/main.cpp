@@ -89,16 +89,13 @@ int main()
 
 
 	/* ======================================== Textures ================================================================ */
-	unsigned int texture1, texture2;
-	glGenTextures(1, &texture1);
-	glBindTexture(GL_TEXTURE_2D, texture1);
-	glGenTextures(1, &texture2);
-	glBindTexture(GL_TEXTURE_2D, texture2);
-
 	/* Load the generate texture */
 	int width, height, nrChannels;
+	unsigned int texture1, texture2;
 
 	// First texture
+	glGenTextures(1, &texture1);					// Generate texture1 and get handle
+	glBindTexture(GL_TEXTURE_2D, texture1);			// Rendering active texture
 	/* Set the texture wrapping/filtering options (on the currently bound texture object) */
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
@@ -117,17 +114,22 @@ int main()
 	}
 	stbi_image_free(data);
 
+
 	// Second texture
+	glGenTextures(1, &texture2);
+	glBindTexture(GL_TEXTURE_2D, texture2);
 	/* Set the texture wrapping/filtering options (on the currently bound texture object) */
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
+	stbi_set_flip_vertically_on_load(true);		// Flipping image verticaly to invert axis Y
+
 	data = stbi_load("./Assets/img/awesomeface.png", &width, &height, &nrChannels, 0);
 	if (data)
 	{
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width/2, height/2, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
 		glGenerateMipmap(GL_TEXTURE_2D);
 	}
 	else
@@ -136,6 +138,9 @@ int main()
 	}
 	stbi_image_free(data);
 
+	ourShader.use();
+	ourShader.setInt("texture1", 0);
+	ourShader.setInt("texture2", 1);
 	/* ====================================== End Textures ============================================================== */
 
 
@@ -153,10 +158,8 @@ int main()
 		glActiveTexture(GL_TEXTURE1);
 		glBindTexture(GL_TEXTURE_2D, texture2);
 
-		ourShader.use();
-		ourShader.setInt("texture1", 0);
-		ourShader.setInt("texture2", 1);
 
+		ourShader.use();
 		glBindVertexArray(VAO);
 		//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);				// Drawing polygons in wireframe mode
 		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);		// Drawing rectangle
@@ -167,6 +170,9 @@ int main()
 		glfwSwapBuffers(window);
 		glfwPollEvents();
 	}
+	glDeleteVertexArrays(1, &VAO);
+	glDeleteBuffers(1, &VBO);
+	glDeleteBuffers(1, &EBO);
 	/* ==================================================================================================================== */
 
 
