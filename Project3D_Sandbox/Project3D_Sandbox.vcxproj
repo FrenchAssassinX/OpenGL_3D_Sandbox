@@ -74,11 +74,11 @@
     <LibraryPath>$(SolutionDir)externalDependencies\glfw\lib-vc2017;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>$(SolutionDir)externalDependencies\glad\include;$(SolutionDir)externalDependencies\glfw\include;$(IncludePath)</IncludePath>
+    <IncludePath>A:\GoogleDrive\5 - Programmation\Projects\Games\Project3D_Sandbox\externalDependencies\stb\stb_image;$(SolutionDir)externalDependencies\glad\include;$(SolutionDir)externalDependencies\glfw\include;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)externalDependencies\glfw\lib-vc2017;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <IncludePath>$(SolutionDir)externalDependencies\glad\include;$(SolutionDir)externalDependencies\glfw\include;$(IncludePath)</IncludePath>
+    <IncludePath>A:\GoogleDrive\5 - Programmation\Projects\Games\Project3D_Sandbox\externalDependencies\stb\stb_image;$(SolutionDir)externalDependencies\glad\include;$(SolutionDir)externalDependencies\glfw\include;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)externalDependencies\glfw\lib-vc2017;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -139,6 +139,14 @@
   <ItemGroup>
     <ClCompile Include="..\externalDependencies\glad\src\glad.c" />
     <ClCompile Include="src\main.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\Shader.h" />
+    <ClInclude Include="src\stb_image.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Shaders\texture.fs" />
+    <None Include="Shaders\texture.vs" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
