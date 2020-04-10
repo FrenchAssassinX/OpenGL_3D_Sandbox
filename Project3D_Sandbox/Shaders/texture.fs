@@ -8,6 +8,8 @@ in vec2 texCoord;
 uniform sampler2D texture1;
 uniform sampler2D texture2;
 
+uniform float opacity;
+
 void main()
 {
 	// Permet de tester les coordonnées de la textures. Et donc de les debugguer si besoin
@@ -24,5 +26,5 @@ void main()
 	//FragColor = texture(texture2, texCoord);
 
 	// Affiche les 2 textures mélangées
-	FragColor = mix(texture(texture1, texCoord), texture(texture2, texCoord * 2), 0.5);
+	FragColor = mix(texture(texture1, texCoord), texture(texture2, texCoord), opacity);
 }

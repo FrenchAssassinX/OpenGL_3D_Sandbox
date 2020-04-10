@@ -14,6 +14,7 @@ void processInput(GLFWwindow *window);
 
 const unsigned int SCR_WIDTH = 800;
 const unsigned int SCR_HEIGHT = 600;
+float opacity = 0.5f;
 
 int main()
 {
@@ -119,17 +120,17 @@ int main()
 	glGenTextures(1, &texture2);
 	glBindTexture(GL_TEXTURE_2D, texture2);
 	/* Set the texture wrapping/filtering options (on the currently bound texture object) */
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 
 	stbi_set_flip_vertically_on_load(true);		// Flipping image verticaly to invert axis Y
 
 	data = stbi_load("./Assets/img/awesomeface.png", &width, &height, &nrChannels, 0);
 	if (data)
 	{
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width/2, height/2, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
 		glGenerateMipmap(GL_TEXTURE_2D);
 	}
 	else
@@ -141,6 +142,7 @@ int main()
 	ourShader.use();
 	ourShader.setInt("texture1", 0);
 	ourShader.setInt("texture2", 1);
+	ourShader.setFloat("opacity", 2);
 	/* ====================================== End Textures ============================================================== */
 
 
@@ -148,6 +150,16 @@ int main()
 	while (!glfwWindowShouldClose(window))
 	{
 		processInput(window);		// Input
+
+		/* Control opacity limits */
+		if (opacity < 0.0f)
+		{
+			opacity = 1.0f;
+		}
+		if (opacity > 1.0f)
+		{
+			opacity = 0.0f;
+		}
 
 		/* Rendering commands here */
 		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
@@ -157,7 +169,6 @@ int main()
 		glBindTexture(GL_TEXTURE_2D, texture1);
 		glActiveTexture(GL_TEXTURE1);
 		glBindTexture(GL_TEXTURE_2D, texture2);
-
 
 		ourShader.use();
 		glBindVertexArray(VAO);
@@ -193,5 +204,17 @@ void processInput(GLFWwindow *window)
 	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
 	{
 		glfwSetWindowShouldClose(window, true);
+	}
+
+	/* Change opacity */
+	if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS)
+	{
+		opacity += 0.1f;
+		printf("%f\n Increase ! Opacity = ", opacity);
+	}
+	else if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS)
+	{
+		opacity -= 0.1f;
+		printf("%f\n Decrease ! Opacity = ", opacity);
 	}
 }
